@@ -1,0 +1,40 @@
+#pip install python-owasp-zap-v2.4
+
+from zapv2 import ZAPv2
+
+# Define the target URL of the web application to scan
+target_url = input("Enter the target URL to scan: ").strip()
+
+# Initialize the ZAP instance
+zap = ZAPv2(apikey='your_api_key', proxies={'http': 'http://localhost:8080', 'https': 'http://localhost:8080'})
+
+# Start the spidering and scanning
+print(f"Spidering target URL: {target_url}")
+zap.spider.scan(target_url)
+
+# Wait until the spider has finished scanning
+while (int(zap.spider.status) < 100):
+    print(f"Spider progress: {zap.spider.status}%")
+    time.sleep(5)
+
+print("Spider completed")
+
+# Start active scanning
+print(f"Scanning target URL: {target_url}")
+zap.ascan.scan(target_url)
+
+# Wait until the scanning has finished
+while (int(zap.ascan.status) < 100):
+    print(f"Scan progress: {zap.ascan.status}%")
+    time.sleep(5)
+
+print("Scan completed")
+
+# Report the results
+alerts = zap.core.alerts()
+if alerts:
+    print(f"\nVulnerabilities found in {target_url}:")
+    for alert in alerts:
+        print(f"Alert: {alert['name']}  |  Risk: {alert['risk']}  |  Description: {alert['description']}")
+else:
+    print(f"No vulnerabilities found in {target_url}")
