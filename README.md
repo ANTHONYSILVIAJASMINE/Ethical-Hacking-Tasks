@@ -1,2 +1,2 @@
-# Simple-calculator-application
-Simple calculator application
+# Ethical hacking tasks
+Ethical hacking tasks
