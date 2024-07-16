@@ -1,0 +1,35 @@
+import nmap
+
+# Function to perform network discovery and return devices
+def discover_devices_on_network(network_range):
+    nm = nmap.PortScanner()
+    nm.scan(hosts=network_range, arguments='-sn')
+
+    devices = []
+    for host in nm.all_hosts():
+        if 'mac' in nm[host]['addresses']:
+            device_info = {
+                'ip': host,
+                'mac': nm[host]['addresses']['mac'],
+                'vendor': nm[host]['vendor']
+            }
+            devices.append(device_info)
+        else:
+            device_info = {
+                'ip': host,
+                'mac': 'N/A',
+                'vendor': 'Unknown'
+            }
+            devices.append(device_info)
+
+    return devices
+
+# Define your home network range (replace with your actual network range)
+home_network_range = '192.168.1.0/24'
+
+# Perform network discovery
+discovered_devices = discover_devices_on_network(home_network_range)
+
+# Print the results
+for device in discovered_devices:
+    print(f"IP Address: {device['ip']}   MAC Address: {device['mac']}   Vendor: {device['vendor']}")
