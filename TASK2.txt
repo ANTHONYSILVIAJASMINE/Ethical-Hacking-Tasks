@@ -1,0 +1,57 @@
+import hashlib
+
+# Function to generate a simple wordlist
+def generate_wordlist():
+    words = [
+        "password",
+        "123456",
+        "qwerty",
+        "football",
+        "monkey",
+        "letmein",
+        "abc123",
+        "iloveyou",
+        "123abc",
+        "welcome"
+    ]
+
+    with open('wordlist.txt', 'w', encoding='utf-8') as f:
+        for word in words:
+            f.write(word + '\n')
+
+# Function to crack MD5 hash using a dictionary attack
+def crack_md5_hash(md5_hash, wordlist):
+    with open(wordlist, 'r', encoding='utf-8') as f:
+        for line in f:
+            word = line.strip()
+            hashed_word = hashlib.md5(word.encode()).hexdigest()
+            if hashed_word == md5_hash:
+                return f"Password cracked: {word}"
+    return "Password not found in the provided wordlist"
+
+# Main function to run the script
+def main():
+    # Check if wordlist.txt exists, generate if not
+    try:
+        with open('wordlist.txt', 'r', encoding='utf-8'):
+            pass
+    except FileNotFoundError:
+        generate_wordlist()
+        print("Wordlist generated: wordlist.txt")
+
+    # Input the MD5 hash you want to crack
+    md5_hash = input("Enter the MD5 hash to crack: ").strip()
+
+    # Input the path to the dictionary (wordlist) file
+    wordlist = 'wordlist.txt'  # Assuming wordlist.txt is in the same directory
+
+    # Attempt to crack the hash
+    result = crack_md5_hash(md5_hash, wordlist)
+
+    # Print the result
+    print(result)
+
+# Entry point of the script
+if __name__ == '__main__':
+    main()
+#5f4dcc3b5aa765d61d8327deb882cf99 -->
